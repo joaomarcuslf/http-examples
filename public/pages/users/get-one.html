@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GET /users/:id</title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+
+<body>
+  <section class="hero is-success">
+    <div class="hero-body">
+      <p class="title">
+        GET /users/:id
+      </p>
+      <p class="subtitle">
+        List one user
+      </p>
+    </div>
+  </section>
+
+  <br />
+
+  <div class="container">
+    <form id="searchForm" class="form">
+      <div class="field">
+        <label class="label">Id:</label>
+        <div class="control">
+          <input class="input" type="text" placeholder="user id">
+        </div>
+      </div>
+
+      <div class="field is-grouped">
+        <div class="control is-pulled-right">
+          <button type="submit" class="button is-link">Search</button>
+        </div>
+      </div>
+    </form>
+
+    <br />
+
+    <div id="app"></div>
+  </div>
+
+  <script src="/js/http.js"></script>
+  <script src="/js/renders.js"></script>
+  <script>
+    document.querySelector("#searchForm").addEventListener("submit", function submit(event) {
+      event.preventDefault();
+
+      const id = event.target.elements[0].value;
+
+      http.get(`/users/${id}`)
+        .then(response => {
+          if (response.status >= 400)
+            throw new Error(response.statusText);
+
+          return response.json()
+        })
+        .then(data => {
+          renderElement(
+            '#app',
+            data
+          );
+        })
+        .catch(error => {
+          renderError(
+            '#app',
+            error
+          );
+        });
+    });
+
+  </script>
+</body>
+
+</html>

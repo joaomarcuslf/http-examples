@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DELETE /users/:id</title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+
+<body>
+  <section class="hero is-success">
+    <div class="hero-body">
+      <p class="title">
+        DELETE /users/:id
+      </p>
+      <p class="subtitle">
+        Delete one user
+      </p>
+    </div>
+  </section>
+
+  <br />
+
+  <div class="container">
+    <form id="deleteForm" class="form">
+      <div class="field">
+        <label class="label">Id:</label>
+        <div class="control">
+          <input class="input" type="text" placeholder="user id">
+        </div>
+      </div>
+
+      <div class="field is-grouped">
+        <div class="control is-pulled-right">
+          <button class="button is-link">Delete</button>
+        </div>
+      </div>
+    </form>
+
+    <br />
+
+    <div id="app"></div>
+  </div>
+
+  <script src="/js/http.js"></script>
+  <script src="/js/renders.js"></script>
+  <script>
+    document.querySelector("#deleteForm").addEventListener("submit", function submit(event) {
+      event.preventDefault();
+
+      const confirm = window.confirm("Are you sure you want to delete this user?");
+
+      if (!confirm) {
+        return;
+      }
+
+      const id = event.target.elements[0].value;
+
+      http.delete(`/users/${id}`)
+        .then(response => {
+          if (response.status >= 400)
+            throw new Error(response.statusText);
+
+          return response.json()
+        })
+        .then(data => {
+          window.location.href = "/";
+        })
+        .catch(error => {
+          renderError(
+            '#app',
+            error
+          );
+        });
+    });
+
+  </script>
+</body>
+
+</html>

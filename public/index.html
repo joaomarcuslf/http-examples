@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>All requests</title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+
+<body>
+  <section class="hero is-success">
+    <div class="hero-body">
+      <p class="title">
+        Index File
+      </p>
+      <p class="subtitle">
+        Listing pages operations
+      </p>
+    </div>
+  </section>
+
+  <br />
+
+  <div class="container">
+    <nav class="panel">
+      <p class="panel-heading">
+        Requests
+      </p>
+      <p class="panel-tabs">
+        <a target-elm="UsersSection" class="is-active">Users</a>
+        <a target-elm="RolesSection">Roles</a>
+      </p>
+      <section id="UsersSection" class="panel-block is-active">
+        <a href="/pages/users/get-all.html"> GET /users </a>
+        <a href="/pages/users/create-one.html"> POST /users </a>
+        <a href="/pages/users/get-one.html"> GET /users/:id </a>
+        <a href="/pages/users/update-one.html"> PUT /users/:id </a>
+        <a href="/pages/users/delete-one.html"> DELETE /users/:id </a>
+      </section>
+
+      <section id="RolesSection" class="panel-block">
+        <a href="/pages/roles/get-all.html"> GET /roles </a>
+        <a href="/pages/roles/create-one.html"> POST /roles </a>
+        <a href="/pages/roles/get-one.html"> GET /roles/:id </a>
+        <a href="/pages/roles/update-one.html"> PUT /roles/:id </a>
+        <a href="/pages/roles/delete-one.html"> DELETE /roles/:id </a>
+      </section>
+    </nav>
+  </div>
+
+  <script src="/js/main.js"></script>
+</body>
+
+</html>

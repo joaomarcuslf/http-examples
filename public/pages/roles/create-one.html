@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>POST /roles</title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+
+<body>
+  <section class="hero is-success">
+    <div class="hero-body">
+      <p class="title">
+        POST /roles
+      </p>
+      <p class="subtitle">
+        Create one role
+      </p>
+    </div>
+  </section>
+
+  <br />
+
+  <div class="container">
+    <form id="createForm" class="form">
+      <div class="field">
+        <label class="label">Name:</label>
+        <div class="control">
+          <input id="name" class="input" type="text" placeholder="role name">
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Profile:</label>
+        <div class="control select is-fullwidth">
+          <select id="profiles" class="select is-fullwidth">
+          </select>
+        </div>
+      </div>
+
+      <div id="app"></div>
+
+      <div class="field is-grouped">
+        <div class="control is-pulled-right">
+          <button type="submit" class="button is-link">Submit</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <script src="/js/http.js"></script>
+  <script src="/js/renders.js"></script>
+  <script>
+    http.get('/profiles')
+      .then(response => {
+        if (response.status >= 400)
+          throw new Error(response.statusText);
+
+        return response.json()
+      })
+      .then(function (profiles) {
+        return profiles.map(function (profile, index, full) {
+          return full[(full.length - 1) - index]
+        });
+      })
+      .then(function (profiles) {
+        return profiles.map(function (profile, index) {
+          return `<option value="${profile.id}" ${index === 0 ? 'selected' : ''}>${profile.name}</option>`;
+        });
+      })
+      .then(function (profiles) {
+        return profiles.join('');
+      })
+      .then(function (profiles) {
+        document.querySelector('#profiles').innerHTML = profiles;
+      });
+
+
+    document.querySelector("#createForm").addEventListener("submit", function submit(event) {
+      event.preventDefault();
+
+      const data = {
+        name: document.querySelector("#createForm #name").value,
+        profile_id: document.querySelector("#createForm #profiles").value
+      };
+
+      http.post(`/roles`, data)
+        .then(response => {
+          if (response.status >= 400)
+            throw new Error(response.statusText);
+
+          return response.json()
+        })
+        .then(data => {
+          window.location.href = `/`;
+        })
+        .catch(error => {
+          renderError(
+            '#app',
+            error
+          );
+        });
+    });
+
+  </script>
+</body>
+
+</html>

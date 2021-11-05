@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GET /users</title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+
+<body>
+  <section class="hero is-success">
+    <div class="hero-body">
+      <p class="title">
+        GET /users
+      </p>
+      <p class="subtitle">
+        Listing all users
+      </p>
+    </div>
+  </section>
+
+  <br />
+
+  <div id="app" class="container">
+
+  </div>
+
+  <script src="/js/http.js"></script>
+  <script src="/js/renders.js"></script>
+  <script>
+    http
+      .get("/users")
+      .then(response => {
+        if (response.status >= 400)
+          throw new Error(response.statusText);
+
+        return response.json()
+      })
+      .then((data) => {
+        renderTable(
+          "#app",
+          data,
+          Object.keys(data[0]),
+        )
+      })
+      .catch(error => {
+        renderError(
+          '#app',
+          error
+        );
+      });
+
+  </script>
+</body>
+
+</html>

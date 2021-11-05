@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>POST /users</title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+
+<body>
+  <section class="hero is-success">
+    <div class="hero-body">
+      <p class="title">
+        POST /users
+      </p>
+      <p class="subtitle">
+        Create one user
+      </p>
+    </div>
+  </section>
+
+  <br />
+
+  <div class="container">
+    <form id="createForm" class="form">
+      <div class="field">
+        <label class="label">Name:</label>
+        <div class="control">
+          <input id="name" class="input" type="text" placeholder="full name">
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Username:</label>
+        <div class="control">
+          <input id="username" class="input" type="text" placeholder="username">
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Role:</label>
+        <div class="control select is-fullwidth">
+          <select id="roles" class="select is-fullwidth">
+          </select>
+        </div>
+      </div>
+
+      <div id="app"></div>
+
+      <div class="field is-grouped">
+        <div class="control is-pulled-right">
+          <button type="submit" class="button is-link">Submit</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <script src="/js/http.js"></script>
+  <script src="/js/renders.js"></script>
+  <script>
+    http.get('/roles')
+      .then(response => {
+        if (response.status >= 400)
+          throw new Error(response.statusText);
+
+        return response.json()
+      })
+      .then(function (roles) {
+        return roles.map(function (role, index, full) {
+          return full[(full.length - 1) - index]
+        });
+      })
+      .then(function (roles) {
+        return roles.map(function (role, index) {
+          return `<option value="${role.id}" ${index === 0 ? 'selected' : ''}>${role.name}</option>`;
+        });
+      })
+      .then(function (roles) {
+        return roles.join('');
+      })
+      .then(function (roles) {
+        document.querySelector('#roles').innerHTML = roles;
+      });
+
+
+    document.querySelector("#createForm").addEventListener("submit", function submit(event) {
+      event.preventDefault();
+
+      const data = {
+        name: document.querySelector("#createForm #name").value,
+        username: document.querySelector("#createForm #username").value,
+        role_id: document.querySelector("#createForm #roles").value
+      };
+
+      http.post(`/users`, data)
+        .then(response => {
+          if (response.status >= 400)
+            throw new Error(response.statusText);
+
+          return response.json()
+        })
+        .then(data => {
+          window.location.href = `/`;
+        })
+        .catch(error => {
+          renderError(
+            '#app',
+            error
+          );
+        });
+    });
+
+  </script>
+</body>
+
+</html>
